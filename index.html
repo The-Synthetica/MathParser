@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./styles.css">
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <nav id="navbar">
+            <header id="header">
+                    <!-- <h1 style="display: none;">Math|Parser</h1> -->
+
+            
+                    <h1 class="glitch" onselectstart="return false">
+                    <span aria-hidden="true">Math|Parser</span>
+                    <span aria-hidden="true">Math|Parser</span>
+                    Math|Parser
+                    <span aria-hidden="true">Math|Parser</span>
+                    </h1>
+
+                    <label for="dropbox-checkbox" class="responsive dropdown-menu">
+                        <input id="dropbox-checkbox" type="checkbox">
+                        <div class="dropdown-menu-icon">
+                        <div class="dropdown-menu-icon-before"></div>
+                        <div class="dropdown-menu-icon-after"></div>
+                        </div>
+
+                        
+                        <div class="dropdown-content">
+                                <a href="#Explicacion" class="responsive-nav-link">Explicacion</a>
+                                <a href="#Fundamentos" class="responsive-nav-link">Fundamentos</a>
+                                <a href="#Utilizacion" class="responsive-nav-link">Utilizacion</a>
+                                <a href="#Header_y_Funciones" class="responsive-nav-link">Header y Funciones</a>
+                                <a href="#Recursivas_y_Analiticas" class="responsive-nav-link">Recursivas y Analiticas</a>
+                                <a href="#Operaciones_Monarias" class="responsive-nav-link">Operaciones Monarias</a>
+                                <a href="#Operaciones_Binarias" class="responsive-nav-link">Operaciones Binarias</a>
+                                <a href="#Limitaciones" class="responsive-nav-link">Limitaciones</a>
+                        </div>
+
+
+                        <div class="dropdown-content-before"></div>
+
+                    </label>
+
+            </header>
+                <a href="#Explicacion" class="nav-link">Explicacion</a>
+                <a href="#Fundamentos" class="nav-link">Fundamentos</a>
+                <a href="#Utilizacion" class="nav-link">Utilizacion</a>
+                <a href="#Header_y_Funciones" class="nav-link">Header y Funciones</a>
+                <a href="#Recursivas_y_Analiticas" class="nav-link">Recursivas y Analiticas</a>
+                <a href="#Operaciones_Monarias" class="nav-link">Operaciones Monarias</a>
+                <a href="#Operaciones_Binarias" class="nav-link">Operaciones Binarias</a>
+                <a href="#Limitaciones" class="nav-link">Limitaciones</a>
+
+
+        </nav>
+        
+        <main id="main-doc">
+            <section id="Explicacion" class="main-section">
+                <header>
+                    Explicacion
+                </header>
+
+                <p>Un MathParser es un algoritmo por el cual podemos obtener el resultado de un calculo que nos ingresa en una linea, siendo el resultado la salida del algoritmo y el calculo la entrada del mismo. Independiente de que tipo de operaciones se haya usado, pero con una importancia total en la notacion, un MathParser nos permite la resolucion de calculos recibidos dentro de un string, sin necesidad de tener que transformar todo esto en lineas de codigo que seran independientes de cada uno de los calculos y por ende no permitirian un trabajo con total libertad.</p>
+                <p>La principal aplicacion para la cual fue hecha esta libreria es para la resolucion de operaciones dentro de un String para calculos destinados a las graficas de ecuaciones. Esta orientada a Arduino y C++, dado a que para los lenguajes de alto nivel suelen haber soluciones mas viables para este tipo de situaciones, usamos una notacion algebraica (otro aspecto que puede ser interesante)...</p>
+            </section>
+
+            <section id="Fundamentos" class="main-section">
+                <header>
+                    Fundamentos
+                </header>
+
+                <p>Las operaciones matematicas tienen dos aspectos fundamentales para poder entender el funcionamiento interno de esta libreria:</p>
+
+                <ul>
+                    <li>Jerarquia de los calculos a realizar.</li>
+                    <li>Representacion en arboles de las operaciones matematicas.</li>
+                </ul>
+
+                <p>La Jerarquia nos va a delimitar el orden de importancia con el que resolver los terminos o operaciones del calculo, si bien el segundo punto tecnicamente ya lo considera, a la hora de pasar las ideas a codigo es escencial entenderlo.</p>
+                <p>Siguiendo el hilo, el segundo punto nos propone la posibilidad de poder representar cualquier calculo matematico en un arbol compuesto por nodos de operaciones y numeros como entradas. Podemos encontrarnos operaciones binarias (de dos terminos) o monarias (de un solo termino), como la suma y el coseno respectivamente. Presten atencion al siguiente ejemplo, tenemos una entrada:</p>
+
+                
+
+                <code>(1 / 2 ^ 2) ^ cos(1) + 2</code>
+
+                <p>Los invito entonces a intentar representar cada una de las operaciones y sus factores requeridos en un arbol. Veran que el resultado de este procedimiento deberia ser este:</p>
+
+                <div onselectstart="return false" id="math-tree">
+                    <div id="plus" class="circle">+</div>
+                    <div id="p1" class="circle">^</div>
+                    <div id="n1" class="circle">2</div>
+                    <div id="d1" class="circle">/</div>
+                    <div id="c1" class="circle">cos()</div>
+                    <div id="n2" class="circle">1</div>
+                    <div id="p2" class="circle">^</div>
+                    <div id="n3" class="circle">1</div>
+                    <div id="n4" class="circle">2</div>
+                    <div id="n5" class="circle">2</div>
+                </div>
+
+                <p>Perfecto, ahora lo unico que deberiamos hacer es recorrer el arbol desde sus raices (que siempre seran numeros) hacia su nodo padre, resolviendo las operaciones que encontremos en el medio con las entradas que se nos fueron otorgadas. Si bien la libreria no utiliza completamente este tipo de pensamiento (por que no transformamos el calculo a un arbol para luego resolverlo, sino que utilizaremos la recursion y la Jerarquia de operaciones para poder hacerlo) es importante aclarar que tenerlo en cuenta de esta manera permitira al usuario poder recrear nuestra experiencia realizando su propia libreria, si asi lo desea...</p>
+            </section>
+
+            <section id="Utilizacion" class="main-section">
+                <header>
+                    Utilizacion
+                </header>
+
+                <p>La utilizacion de la libreria es bastante simple, siempre y cuando sigamos determinadas reglas para el ingreso del String que contienen la operacion, y sepamos cual funcion hay que utilizar.</p>
+                
+                <code>
+<span class="ino-include">#include</span> <span class="ino-var">"MathParser.h"</span>
+
+<span class="ino-var">String</span> Funcion="(1 / 2 ^ 2) ^ cos[1] + 2";
+
+
+<span class="ino-var">void</span> <span class="ino-function">setup</span>(){
+
+    <span class="ino-function">Serial.begin</span>(9600);
+
+    <span class="ino-function">Serial.println</span>( Analizar(Funcion) );
+
+}
+
+<span class="ino-var">void</span> <span class="ino-function">loop</span>(){
+
+} 
+                </code>
+
+                <p>En este ejemplo podemos ver que es tan simple como llamar a la funcion y pasarle como parametro el String a resolver, recordamos que para que la libreria pueda ser incluida, en la misma carpeta que tenemos el codigo tiene que estar el archivo de cabecera ".h" y el archivo de la libreria ".cpp"</p>
+                <p>La parte compleja esta en la forma que tiene que tener el calculo dentro del String, siguiendo las siguientes normas:</p>
+
+                <dl>
+                    <dt>Los operadores matematicos deben tener un espacio a ambos lados</dt>
+                        <dd>Cada uno de los operadores de las operaciones matematicas que estemos haciendo debe tener un espacio en ambos lados, por ejemplo, una suma debe verse asi: "2 + 2" y nunca deberia verse asi "2+2".</dd>
+
+                    <dt>Los calculos monarios deben usar corchetes y NO parentesis</dt>
+                        <dd>Cuando usemos una operacion monaria, deberemos usar corchetes para definir sus limites, por ejemplo, un coseno deberia ser escrito como "cos[ 0.5 + 0.25 ]".</dd>
+                </dl>
+
+            </section>
+            
+            <section id="Header_y_Funciones" class="main-section">
+                <header>
+                    Header y Funciones
+                </header>
+                
+                <code>
+<span class="ino-include">#ifndef MATHPARSER_H</span>
+<span class="ino-include">#define MATHPARSER_H</span>
+
+<span class="ino-include">#include < <span class="ino-var">arduino.h</span> ></span> //Necesario para el uso de las funciones String de Arduino
+
+
+<span class="ino-var">String</span> Reemplazar(<span class="ino-var">String</span> Fx, <span class="ino-var">float</span> X); //Reemplaza las X en un string por un valor dado.
+
+
+//Funciones Recursivas y Analiticas
+<span class="ino-var">float</span> Analizar(<span class="ino-var">String</span> Fx); //Analiza el calculo jerarquicamente
+
+<span class="ino-var">float</span> Termino(<span class="ino-var">String</span> Fx); //Procesamos un Termino para determinar si tiene alguna operacion dentro, recursamos hasta encontrar el numero.
+
+<span class="ino-var">float</span> Num(<span class="ino-var">String</span> Fx); //Transformamos un String en su valor numerico.
+
+
+//Operaciones Binarias
+<span class="ino-var">float</span> Suma(<span class="ino-var">String</span> Fx); //Resolvemos una suma dentro de un String
+
+<span class="ino-var">float</span> Resta(<span class="ino-var">String</span> Fx); //Resolvemos una resta dentro de un String
+
+<span class="ino-var">float</span> Division(<span class="ino-var">String</span> Fx); //Resolvemos una division dentro de un String
+
+<span class="ino-var">float</span> Multiplicacion(<span class="ino-var">String</span> Fx); //Resolvemos una Multiplicacion dentro de un String
+
+<span class="ino-var">float</span> Potencia(<span class="ino-var">String</span> Fx); //Resolvemos una Potencia dentro de un String
+
+
+//Operaciones Monarias
+<span class="ino-var">float</span> Negativo(<span class="ino-var">String</span> Fx); //Analiza y despeja numeros negativos de un String
+
+<span class="ino-var">float</span> Parentesis(<span class="ino-var">String</span> Fx); //Resolvemos el contenido de un Parentesis y reincorporamos
+
+<span class="ino-var">float</span> Logaritmo(<span class="ino-var">String</span> Fx); //Resolvemos un Logaritmo base 10 dentro de un String
+
+<span class="ino-var">float</span> Seno(<span class="ino-var">String</span> Fx); //Resolvemos un Seno dentro de un string
+
+<span class="ino-var">float</span> Coseno(<span class="ino-var">String</span> Fx); //Resolvemos un Coseno dentro de un string
+
+<span class="ino-var">float</span> Tangente(<span class="ino-var">String</span> Fx); //Resolvemos una Tangente dentro de un string
+
+
+<span class="ino-include">#endif</span>
+                    </code>
+
+                <p>Estas son todas las funciones que encontraremos dentro de la libreria, podemos ver 3 divisiones especificas (ademas de la definicion y declaracion de la libreria) que son "Funciones Recursivas y Analiticas", el grupo encargado de priorizar la jerarquia y la recursion a la hora de recorrer el calculo; "Operaciones Monarias" grupo de funciones matematicas de un solo termino que se pueden resolver facilmente y "Operaciones Binarias" las funciones de dos terminos que suelen costar un poco mas resolver. </p>
+            </section>
+
+            <section id="Recursivas_y_Analiticas" class="main-section">
+                <header>
+                    Recursivas y Analiticas
+                </header>
+
+                <h3>Num</h3>
+
+                    <code>
+<span class="ino-var">float</span> Num(<span class="ino-var">String</span> Fx){
+<span class="ino-include">if</span>(Fx==" ")
+    <span class="ino-include">return</span> 0;
+
+<span class="ino-include">if</span>(Fx.indexOf("NAN")!=-1)
+    <span class="ino-include">return</span> NAN;
+
+<span class="ino-include">else</span>
+<span class="ino-include">return</span> Fx.toFloat();
+}
+                    </code>
+
+                <p>Esta funcion va a transformar el String ingresante a su valor numerico. En simples palabras transforma numeros escritos a valor numerico. Tiene 2 condiciones previas a cumplir para evitar bugs que se encargan de transformar en 0 los vacios y de devolver un NAN al maximo valor negativo que la variable puede soportar.</p>
+                
+                <h3>Termino</h3>
+                    <code>
+<span class="ino-var">float</span> Termino(<span class="ino-var">String</span> Fx){
+    <span class="ino-function">Serial.println</span>("Termino");
+    <span class="ino-function">Serial.println</span>(Fx);
+
+    <span class="ino-var">int</span> i=0;
+
+    //Recorremos el String buscando jerarquicamente operaciones
+    
+    <span class="ino-include">for</span>(i=0; i < Fx.<span class="ino-function">length</span>(); i++){
+
+    <span class="ino-include">if</span>(Fx[i]=='('){
+        //Si encontramos un parentesis, recursamos el termino
+        <span class="ino-include">return</span> Parentesis(Fx);
+    }
+
+    <span class="ino-include">if</span>(Fx[i]=='^'){
+        //Si encontramos una potencia, recursamos
+        <span class="ino-include">return</span> Potencia(Fx);
+    }
+
+    <span class="ino-include">if</span>(Fx[i]=='l'){
+        //Si encontramos un logaritmo, recursamos
+        <span class="ino-include">return</span> Logaritmo(Fx);
+    }
+
+    <span class="ino-include">if</span>(Fx[i]=='s'){
+        //Si encontramos un seno, recursamos
+        <span class="ino-include">return</span> Seno(Fx);
+    }
+
+    <span class="ino-include">if</span>(Fx[i]=='c'){
+        //Si encontramos un coseno, recursamos
+        <span class="ino-include">return</span> Coseno(Fx);
+    }
+
+    <span class="ino-include">if</span>(Fx[i]=='t'){
+        //Si encontramos una tangente, recursamos
+        <span class="ino-include">return</span> Tangente(Fx);
+    }
+
+    <span class="ino-include">if</span>(Fx[i]=='/'){
+        //Si encontramos una division, recursamos
+        <span class="ino-include">return</span> Division(Fx);
+    }
+
+    <span class="ino-include">if</span>(Fx[i]=='*'){
+        //Si encontramos una multiplicacion, recursamos
+        <span class="ino-include">return</span> Multiplicacion(Fx);
+    }
+    
+    <span class="ino-include">if</span>(Fx[i]=='+'){
+        //Si encontramos una suma, recursamos
+        <span class="ino-include">return</span> Suma(Fx);
+    }
+
+    <span class="ino-include">if</span>(Fx[i]=='-' && i!=0){
+        //Si encontramos una resta, recursamos
+        <span class="ino-include">if</span>(Fx[i+1]!=' ')
+        <span class="ino-include">return</span> Negativo(Fx);
+        
+        
+        <span class="ino-include">else</span>
+        <span class="ino-include">return</span> Resta(Fx);
+    }
+    
+    }
+
+    //De no encontrar la Operacion realizamos la transformacion a float
+    <span class="ino-include">return</span> Num(Fx);
+}
+                    </code>
+                <p>Termino es una funcion que no recibe el calculo entero, sino terminos del mismo en forma de string y jerarquicamente buscara resolver las operaciones de los terminos que esten primeros en el orden de prioridad, enviando a la funcion correspondiente el mismo. De no haber operaciones a realizar, la funcion simplemente retornara el numero para ser transformado en "Analizar". Es de alguna manera una lectura de los terminos del calculo para poder entender que paso es el que tenemos que dar o si todavia queda algo por hacer dentro de ese calculo.</p>
+                
+                <h3>Analizar</h3>
+
+                <p>Es una de las funciones mas complejas, "Analizar" es la funcion principal de nuestro sistema, esta es la primera en recibir el calculo y recursa en las funciones encargadas de resolverlo con sus propios signos, con el objetivo de poder ir haciendo el calculo paso a paso, reemplazando el termino matematico con los valores obtenidos de las funciones que lo resolvieron. Asi hasta alcanzar el resultado. Pese a ser la funcion mas larga, es bastante simple considerando que tiene que incluir cada una de las operaciones matematicas admitidas por la libreria. Debido a la complejidad vamos a explicarla graficamente en vez de usar el codigo como ejemplo grafico.</p>
+
+                
+                <div onselectstart="return false" class="function-graph">
+                    <div id="Analizar" class="box-graph">Analizar()</div>
+                    <div id="StringFx" class="box-graph">String Fx</div>
+                    <div id="Parentesis" class="box-graph">Parentesis()</div>
+                    <div id="OpMonarias" class="box-graph">Op Monarias</div>
+                    <div id="OpBinarias" class="box-graph">Op Binarias</div>
+                    <div id="Termino" class="box-graph">Termino()</div>
+                    <div id="Numero" class="box-graph">Numero()</div>
+                    <div id="Resultado" class="box-graph">Resultado</div>
+                </div>
+
+                
+                <p>Como son bastantes las operaciones, tanto monarias como binarias, y su estructura es casi la misma en casos similes, no voy a extenderme mas que en explicar un ejemplo de cada una.</p>
+            </section>
+
+
+            <section id="Operaciones_Monarias" class="main-section">
+                <header>
+                    Operaciones Monarias
+                </header>
+
+                <code> 
+                    
+<span class="ino-var">float</span> Coseno(<span class="ino-var">String</span> Fx){
+
+    <span class="ino-function">Serial.println</span>("Coseno");
+    <span class="ino-function">Serial.println</span>(Fx);
+    
+    <span class="ino-var">float</span> Resultado=0;
+    
+    <span class="ino-var">int</span> i=0, Pos=0, Pos2=0;
+    <span class="ino-var">String</span> Term1, Term2;
+    <span class="ino-var">float</span> Termino1, Termino2;
+
+    
+    //Rastreamos el signo c y dividimos el term1
+    <span class="ino-var">int</span> j=0, Pos3=0;
+    
+<span class="ino-include">for</span> (i=0; i < Fx.<span class="ino-function">length</span>(); i++){
+        
+        <span class="ino-include">if</span>(Fx[i]==<span class="ino-var">'c'</span> <span class="ino-include">and</span> Pos==0){
+        Pos= i;
+        
+        //Guardamos la posicion del c y ya sabemos donde esta su [
+        Pos3= Pos+3;
+        
+
+        //Guardamos la posicion del c y vamos hasta la posicion posterior
+        <span class="ino-include">for</span>(j=Pos3; j < Fx.<span class="ino-function">length</span>(); j++){
+        <span class="ino-include">if</span>(Fx[j]==<span class="ino-var">']'</span>)
+        Pos2=j;
+        }  
+        
+        }
+        }
+    
+    Term1= Fx.<span class="ino-function">substring</span>(Pos3+1, Pos2); //Termino dentro de los []
+    
+    //Nos aseguramos que los terminos no contienen otra Operacion y los pasamos a numero.
+
+    Termino1= Termino(Term1);
+
+    //Realizamos la Operacion
+    Resultado= <span class="ino-function">cos</span>(Termino1);
+    <span class="ino-include">return</span> Resultado;
+}
+                </code>
+
+                <p>Las operaciones Monarias son operaciones matematicas de un solo termino. En el caso de la funcion "coseno", que recibira un string donde sabemos que dentro se encuetra un coseno a resolver, se encargara de rastrearlo y retornar el resultado del mismo. Idem a otras operaciones monarias incluidas en la libreria.</p>
+            </section>
+
+            <section id="Operaciones_Binarias" class="main-section">
+                <header>
+                    Operaciones Binarias
+                </header>
+
+                <code>
+<span class="ino-var">float</span> Suma(<span class="ino-var">String</span> Fx){
+<span class="ino-function">Serial.println</span>("Suma");
+<span class="ino-function">Serial.println</span>(Fx);
+//Una operacion de 2 terminos.
+
+<span class="ino-var">float</span> Resultado=0;
+
+<span class="ino-var">int</span> i=0, Pos=0, Pos2=0;
+<span class="ino-var">String</span> Term1, Term2;
+<span class="ino-var">float</span> Termino1, Termino2;
+
+//Rastreamos el signo + y dividimos los Term1 y Term2
+<span class="ino-var">int</span> j=0, Pos3=0;
+
+<span class="ino-include">for</span> (i=0; i < Fx.<span class="ino-function">length</span>(); i++){
+    
+    <span class="ino-include">if</span>(Fx[i]==<span class="ino-var">'+'</span> <span class="ino-include">and</span> Pos==0){
+    Pos= i;
+    
+    //Guardamos la posicion del + y recorremos hacia atras
+    <span class="ino-include">for</span>(j=Pos-2; j>=0; j--){
+        if(Fx[j]==<span class="ino-var">' '</span> and Pos3==0){
+        Pos3=j+1;
+        }
+    }
+
+    <span class="ino-include">if</span>(j==0 and Pos3==0)
+        Pos3=j;
+    
+
+    //Guardamos la posicion del + y recorremos hacia adelante
+    <span class="ino-include">for</span>(j=Pos+2; j < Fx.<span class="ino-function">length</span>(); j++){
+        <span class="ino-include">if</span>(Fx[j]==<span class="ino-var">' '</span> <span class="ino-include">and</span> Pos2==0)
+        Pos2=j;
+    }
+    
+    <span class="ino-include">if</span>(Pos2==0)
+        Pos2=j;      
+    
+    }
+    }
+
+Term1= Fx.<span class="ino-function">substring</span>(Pos3, Pos-1);
+Term2= Fx.<span class="ino-function">substring</span>(Pos+2, Pos2);
+
+//Nos aseguramos que los terminos no contienen otra suma y los pasamos a numero.
+
+Termino1= Termino(Term1);
+Termino2= Termino(Term2);
+
+
+//Realizamos la suma
+Resultado= Termino1 + Termino2;
+<span class="ino-include">return</span> Resultado;
+}
+                </code>
+
+                <p>Las operaciones Binarias son operaciones matematicas de dos terminos. En el caso de la funcion "suma", que recibira un string donde sabemos que dentro se encuetra una suma a resolver, se encargara de rastrear ambos terminos y retornar el resultado del mismo. Idem a otras operaciones binarias incluidas en la libreria.</p>
+            </section>
+
+            <section id="Limitaciones" class="main-section">
+                <header>
+                    Limitaciones
+                </header>
+
+                <p>La libreria fue creada para solventar la problematica que se me presento realizando un proyecto de graficadora matematica. El no tener forma de realizar calculos dentro de un string y la necesidad de crear una pese a no tener demasiados conocimientos al respecto. Sin embargo, tiene varias limitaciones en su funcionalidad que pueden ser arregladas y otras tantas que todavia no encontre, <span>Quien vea esto, sientase libre de poder usar esta libreria para lo que quiera</span>.</p>
+
+                <h3>Limitaciones del sistema:</h3>
+
+                
+                    <li>
+                        <dt>Representacion de las operaciones en el String</dt>
+                    </li>
+                        <li>
+                            <dd>La libreria esta limitada a que las funciones se representen solo de una manera, por ejemplo, las operaciones trigonometricas solo pueden ser escritas como "cos[]" y si bien podriamos modificar el codigo para usar parentesis, en la libreria encontramos en el uso de los corchetes una ventaja que puede ser modificada si llegase a significar una limitacion para usted. De la misma manera, todas los operadores deben estar separado por un espacio al principio y al final para delimitar los terminos facilmente. Esto implica que ante un espacio mal puesto, el sistema puede fallar y devolvernos una salida erronea.</dd>
+                        </li>
+                        
+                    <li>
+                        <dt>Libreria sin desarrollar</dt>
+                    </li>
+                        <li>
+                            <dd>Esta no es la version final de la libreria, mucho menos la mas optima. Si bien el proyecto quedo en pausa hace ya un año, hay muchas modificaciones que realizar y muchas posibilidades de mejora que probar, por ende podemos decir que esta en desarrollo. Ademas, le faltan otras funciones matematicas que agregar y explorar en la posibilidad de que tambien pueda resolver calculos en otros "paradigmas" matematicos como la resolucion de Matrices o Ecuaciones de mas de 1 variable.</dd>
+                        </li>
+                            
+                    <li>
+                        <dt>Falta de testeo</dt>
+                    </li>
+                        <li>
+                            <dd>Si bien la libreria fue probada y utilizada muchisimas veces, todavia esta la posibilidad de que posea bugs o recursiones innecesarias que la hagan poco eficientes para algunas situaciones determinadas. Les recomendamos que intenten usar esto como un proceso a tomar de ejemplo, pero no como una herramienta final.</dd>
+                        </li>
+                
+                
+            </section>
+
+        </main>
+
+    </body>
+</html>
