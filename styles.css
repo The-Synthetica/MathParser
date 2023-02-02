@@ -2,11 +2,14 @@
 
 * {
     box-sizing: border-box;
-    /* overflow-x: hidden; */
 }
-
+html::-webkit-scrollbar {
+    display: none;
+}
 html{
     scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 :root {
